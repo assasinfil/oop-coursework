@@ -5,5 +5,4 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(.)
 
-add_executable(oop_kursach
-        main.cpp)
+add_executable(main.cpp graph.cpp)
