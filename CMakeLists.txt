@@ -5,4 +5,4 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(.)
 
-add_executable(main.cpp graph.cpp vertex.cpp vertex.h edge.cpp edge.h)
+add_executable(oop-kursach main.cpp graph.cpp graph.h vertex.cpp vertex.h edge.cpp edge.h)
