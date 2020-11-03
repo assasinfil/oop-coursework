@@ -4,6 +4,25 @@
 
 #include "graph.h"
 
+
+class Vertex {
+public:
+    Vertex();
+
+    virtual ~Vertex();
+
+    friend std::ostream &operator<<(std::ostream &os, const Vertex &vertex);
+};
+
+class Edge {
+public:
+    Edge();
+
+    virtual ~Edge();
+
+    friend std::ostream &operator<<(std::ostream &os, const Edge &edge);
+};
+
 //TODO add parameters
 Graph::Graph() {}
 
