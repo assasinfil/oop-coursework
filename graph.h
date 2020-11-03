@@ -9,11 +9,17 @@
 
 class Graph {
 public:
-    Graph();
+    Graph(int y, int x);
+
+    Graph(Graph* other);
 
     virtual ~Graph();
 
     friend std::ostream &operator<<(std::ostream &os, const Graph &graph);
+
+private:
+    int length, width;
+    int **matrix;
 };
 
 #endif //OOP_KURSACH_GRAPH_H
