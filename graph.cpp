@@ -27,6 +27,24 @@ Graph::~Graph() {
     delete matrix;
 }
 
+Graph::Graph(const Graph &other) {
+    length = other.length;
+    width = other.width;
+
+    if (other.matrix) {
+        matrix = new int *[length];
+
+        for (int i = 0; i < length; ++i)
+            matrix[i] = new int[width];
+
+        for (int i = 0; i < length; ++i) {
+            for (int j = 0; j < width; ++j) {
+                matrix[i][j] = other.matrix[i][j];
+            }
+        }
+    }
+}
+
 std::ostream &operator<<(std::ostream &os, const Graph &graph) {
     for (int i = 0; i < graph.length; ++i) {
         for (int j = 0; j < graph.width; ++j) {
@@ -37,6 +55,26 @@ std::ostream &operator<<(std::ostream &os, const Graph &graph) {
     return os;
 }
 
-Graph::Graph(Graph *other) {
-//TODO complete copy constructor
-}
+//TODO operator=
+//что тут не так?
+/*Graph &Graph::operator=(const Graph &op) {
+    length = op.length;
+    width = op.width;
+
+    if (op.matrix) {
+        matrix = new int *[length];
+
+        for (int i = 0; i < length; ++i)
+            matrix[i] = new int[width];
+
+        for (int i = 0; i < length; ++i) {
+            for (int j = 0; j < width; ++j) {
+                matrix[i][j] = op.matrix[i][j];
+            }
+        }
+    }
+    return *this;
+}*/
+
+
+

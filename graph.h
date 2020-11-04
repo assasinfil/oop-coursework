@@ -11,7 +11,9 @@ class Graph {
 public:
     Graph(int y, int x);
 
-    Graph(Graph* other);
+    Graph(const Graph& other);
+
+    //Graph& operator=(const Graph &op);
 
     virtual ~Graph();
 
