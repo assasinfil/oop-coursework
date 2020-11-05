@@ -65,8 +65,6 @@ std::ostream &operator<<(std::ostream &os, const Graph &graph) {
     return os;
 }
 
-//TODO operator=
-//что тут не так?
 Graph &Graph::operator=(const Graph &op) {
     if (this != &op) {
         length = op.length;
@@ -86,6 +84,10 @@ Graph &Graph::operator=(const Graph &op) {
         }
     }
     return *this;
+}
+
+std::istream &operator>>(std::istream &is, const Graph &graph) {
+    return is;
 }
 
 

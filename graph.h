@@ -18,6 +18,7 @@ public:
     virtual ~Graph();
 
     friend std::ostream &operator<<(std::ostream &os, const Graph &graph);
+    friend std::istream &operator>>(std::istream &is, const Graph &graph);
 
 private:
     int length, width;
