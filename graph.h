@@ -13,7 +13,7 @@ public:
 
     Graph(const Graph& other);
 
-    //Graph& operator=(const Graph &op);
+    Graph &operator=(const Graph &op);
 
     virtual ~Graph();
 
@@ -21,7 +21,7 @@ public:
 
 private:
     int length, width;
-    int **matrix;
+    int **matrix = nullptr;
 };
 
 #endif //OOP_KURSACH_GRAPH_H

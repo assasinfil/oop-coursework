@@ -5,13 +5,29 @@
 #include "graph.h"
 
 
+void free_matrix(int **matrix, int length) {
+    if (matrix != nullptr) {
+        for (int i = 0; i < length; ++i) {
+            delete[] matrix[i];
+        }
+        delete matrix;
+    }
+}
+
+int **create_matrix(int **matrix, int length, int width) {
+    matrix = new int *[length];
+    for (int i = 0; i < length; ++i) {
+        matrix[i] = new int[width];
+    }
+    return matrix;
+}
+
 Graph::Graph(int y, int x) {
     length = y;
     width = x;
-    matrix = new int *[y];
-    for (int i = 0; i < y; ++i) {
-        matrix[i] = new int[x];
-    }
+
+    matrix = create_matrix(matrix, length, width);
+
     //TODO load matrix
     for (int i = 0; i < y; ++i) {
         for (int j = 0; j < x; ++j) {
@@ -21,21 +37,15 @@ Graph::Graph(int y, int x) {
 }
 
 Graph::~Graph() {
-    for (int i = 0; i < length; ++i) {
-        delete[] matrix[i];
-    }
-    delete matrix;
+    free_matrix(matrix, length);
 }
 
 Graph::Graph(const Graph &other) {
     length = other.length;
     width = other.width;
 
-    if (other.matrix) {
-        matrix = new int *[length];
-
-        for (int i = 0; i < length; ++i)
-            matrix[i] = new int[width];
+    if (other.matrix != nullptr) {
+        matrix = create_matrix(matrix, length, width);
 
         for (int i = 0; i < length; ++i) {
             for (int j = 0; j < width; ++j) {
@@ -57,24 +67,26 @@ std::ostream &operator<<(std::ostream &os, const Graph &graph) {
 
 //TODO operator=
 //что тут не так?
-/*Graph &Graph::operator=(const Graph &op) {
-    length = op.length;
-    width = op.width;
+Graph &Graph::operator=(const Graph &op) {
+    if (this != &op) {
+        length = op.length;
+        width = op.width;
 
-    if (op.matrix) {
-        matrix = new int *[length];
+        if (op.matrix != nullptr) {
+            if (matrix != nullptr) {
+                free_matrix(matrix, length);
+            }
+            matrix = create_matrix(matrix, length, width);
 
-        for (int i = 0; i < length; ++i)
-            matrix[i] = new int[width];
-
-        for (int i = 0; i < length; ++i) {
-            for (int j = 0; j < width; ++j) {
-                matrix[i][j] = op.matrix[i][j];
+            for (int i = 0; i < length; ++i) {
+                for (int j = 0; j < width; ++j) {
+                    matrix[i][j] = op.matrix[i][j];
+                }
             }
         }
     }
     return *this;
-}*/
+}
 
 
 
