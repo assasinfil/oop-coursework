@@ -85,7 +85,7 @@ Graph &Graph::operator=(const Graph &op) {
     }
     return *this;
 }
-
+//TODO operator>>
 std::istream &operator>>(std::istream &is, const Graph &graph) {
     return is;
 }
