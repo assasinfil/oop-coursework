@@ -28,7 +28,6 @@ Graph::Graph(int y, int x) {
 
     matrix = create_matrix(matrix, length, width);
 
-    //TODO load matrix
     for (int i = 0; i < y; ++i) {
         for (int j = 0; j < x; ++j) {
             matrix[i][j] = 0;
@@ -85,8 +84,13 @@ Graph &Graph::operator=(const Graph &op) {
     }
     return *this;
 }
-//TODO operator>>
-std::istream &operator>>(std::istream &is, const Graph &graph) {
+
+std::istream &operator>>(std::istream &is, Graph &graph) {
+    for (int i = 0; i < graph.length; ++i) {
+        for (int j = 0; j < graph.width; ++j) {
+            is >> graph.matrix[i][j];
+        }
+    }
     return is;
 }
 
