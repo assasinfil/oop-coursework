@@ -9,10 +9,12 @@ using namespace std;
 
 int main() {
     ifstream f("input.txt");
-    int x, y;
-    f >> x >> y;
-    Graph graph(y, x);
+    int n;
+    f >> n;
+    Graph graph(n);
     f >> graph;
     cout << graph;
+
+    cout << graph.maxFlow(0, 5, graph.Ford_Fulkerson);
     return 0;
 }

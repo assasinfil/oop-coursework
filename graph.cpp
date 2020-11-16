@@ -7,8 +7,10 @@
 Graph::Graph(int n) {
     this->n = n;
     matrix.resize(n);
+    flowGraph.resize(n);
     for (int i = 0; i < n; ++i) {
         matrix[i].resize(n);
+        flowGraph[i].resize(n);
     }
 }
 
@@ -52,22 +54,76 @@ std::istream &operator>>(std::istream &is, Graph &graph) {
     return is;
 }
 
-int Graph::maxFlow(int source, int target) {
+int Graph::maxFlow(int source, int target, int type) {
     int MaxFlow = 0;
     int AddFlow;
     do {
-        AddFlow = findTarget(source, target);
+        switch (type) {
+            case Ford_Fulkerson:
+                AddFlow = FordFulkerson(source, target);
+                break;
+            case Edmonds_Karp:
+                AddFlow = EdmondsKarp(source, target);
+                break;
+            case Dinitz:
+//                AddFlow = Dinitz(source, target);
+                break;
+        }
         MaxFlow += AddFlow;
     } while (AddFlow > 0);
     return MaxFlow;
 }
 
-int Graph::findTarget(int source, int target) {
+int Graph::EdmondsKarp(int source, int target) {
     std::queue<int> q;
     q.push(source);
-    std::vector<bool> used(this->n);
+    std::vector<bool> used(this->n, 0);
+    std::vector<int> dist(this->n, INT_MAX);
+    used[source] = true;
+    dist[source] = 0;
+    while (!q.empty()) {
+        int vertex = q.front();
+        q.pop();
+        for (int i = 0; i < this->n; ++i) {
+            if (!used[i]) {
+                used[i] = true;
+                q.push(i);
+                dist[i] = dist[vertex] + 1;
+            }
+        }
+    }
+    return dist[target];
+}
 
-    return 0;
+int Graph::FordFulkerson(int source, int target) {
+    std::vector<int> flow(this->n, 0);
+    std::vector<int> link(this->n, -1);
+    flow[source] = INT_MAX;
+
+    std::queue<int> q;
+    q.push(source);
+    while (link[target] == -1 && !q.empty()) {
+        int vertex = q.front();
+        q.pop();
+        for (int i = 0; i < this->n; ++i) {
+            if ((matrix[vertex][i] - flowGraph[vertex][i]) > 0 and flow[i] == 0) {
+                q.push(i);
+                link[i] = vertex;
+                if (matrix[vertex][i] - flowGraph[vertex][i] < flow[vertex])
+                    flow[i] = matrix[vertex][i];
+                else
+                    flow[i] = flow[vertex];
+            }
+        }
+    }
+    if (link[target] == -1) return 0;
+
+    int vertex = target;
+    while (vertex != source) {
+        flowGraph[link[vertex]][vertex] += flow[target];
+        vertex = link[vertex];
+    }
+    return flow[target];
 }
 
 

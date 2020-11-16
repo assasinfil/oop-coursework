@@ -12,15 +12,23 @@
 
 class Graph {
 public:
+    enum {
+        Ford_Fulkerson,
+        Edmonds_Karp,
+        Dinitz
+    };
+
     Graph(int n);
 
     Graph(const Graph &other);
 
     Graph &operator=(const Graph &op);
 
-    int findTarget(int source, int target);
+    int EdmondsKarp(int source, int target);
 
-    int maxFlow(int source, int target);
+    int FordFulkerson(int source, int target);
+
+    int maxFlow(int source, int target, int type);
 
     virtual ~Graph();
 
@@ -31,6 +39,7 @@ public:
 private:
     int n;
     std::vector<std::vector<int>> matrix;
+    std::vector<std::vector<int>> flowGraph;
 };
 
 #endif //OOP_KURSACH_GRAPH_H
