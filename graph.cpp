@@ -4,90 +4,48 @@
 
 #include "graph.h"
 
-
-void free_matrix(int **matrix, int length) {
-    if (matrix != nullptr) {
-        for (int i = 0; i < length; ++i) {
-            delete[] matrix[i];
-        }
-        delete matrix;
-    }
-}
-
-int **create_matrix(int **matrix, int length, int width) {
-    matrix = new int *[length];
-    for (int i = 0; i < length; ++i) {
-        matrix[i] = new int[width];
-    }
-    return matrix;
-}
-
-Graph::Graph(int y, int x) {
-    length = y;
-    width = x;
-
-    matrix = create_matrix(matrix, length, width);
-
-    for (int i = 0; i < y; ++i) {
-        for (int j = 0; j < x; ++j) {
-            matrix[i][j] = 0;
-        }
+Graph::Graph(int n) {
+    this->n = n;
+    matrix.resize(n);
+    for (int i = 0; i < n; ++i) {
+        matrix[i].resize(n);
     }
 }
 
 Graph::~Graph() {
-    free_matrix(matrix, length);
+    matrix.clear();
 }
 
 Graph::Graph(const Graph &other) {
-    length = other.length;
-    width = other.width;
+    this->n = other.n;
 
-    if (other.matrix != nullptr) {
-        matrix = create_matrix(matrix, length, width);
-
-        for (int i = 0; i < length; ++i) {
-            for (int j = 0; j < width; ++j) {
-                matrix[i][j] = other.matrix[i][j];
-            }
-        }
-    }
+    matrix.clear();
+    copy(other.matrix.begin(), other.matrix.end(), back_inserter(matrix));
 }
 
 std::ostream &operator<<(std::ostream &os, const Graph &graph) {
-    for (int i = 0; i < graph.length; ++i) {
-        for (int j = 0; j < graph.width; ++j) {
-            os << graph.matrix[i][j] << ' ';
+    for (const auto &row : graph.matrix) {
+        for (const auto &item : row) {
+            os << item << ' ';
         }
-        os << '\n';
+        os << std::endl;
     }
     return os;
 }
 
-Graph &Graph::operator=(const Graph &op) {
-    if (this != &op) {
-        length = op.length;
-        width = op.width;
+Graph &Graph::operator=(const Graph &other) {
+    if (this != &other) {
+        this->n = other.n;
 
-        if (op.matrix != nullptr) {
-            if (matrix != nullptr) {
-                free_matrix(matrix, length);
-            }
-            matrix = create_matrix(matrix, length, width);
-
-            for (int i = 0; i < length; ++i) {
-                for (int j = 0; j < width; ++j) {
-                    matrix[i][j] = op.matrix[i][j];
-                }
-            }
-        }
+        matrix.clear();
+        copy(other.matrix.begin(), other.matrix.end(), back_inserter(matrix));
     }
     return *this;
 }
 
 std::istream &operator>>(std::istream &is, Graph &graph) {
-    for (int i = 0; i < graph.length; ++i) {
-        for (int j = 0; j < graph.width; ++j) {
+    for (int i = 0; i < graph.matrix.size(); ++i) {
+        for (int j = 0; j < graph.matrix.size(); ++j) {
             is >> graph.matrix[i][j];
         }
     }
@@ -105,7 +63,10 @@ int Graph::maxFlow(int source, int target) {
 }
 
 int Graph::findTarget(int source, int target) {
-    //TODO findTarget
+    std::queue<int> q;
+    q.push(source);
+    std::vector<bool> used(this->n);
+
     return 0;
 }
 

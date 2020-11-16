@@ -7,10 +7,12 @@
 
 #include <iostream>
 #include <ostream>
+#include <queue>
+#include <vector>
 
 class Graph {
 public:
-    Graph(int y, int x);
+    Graph(int n);
 
     Graph(const Graph &other);
 
@@ -27,8 +29,8 @@ public:
     friend std::istream &operator>>(std::istream &is, Graph &graph);
 
 private:
-    int length, width;
-    int **matrix = nullptr;
+    int n;
+    std::vector<std::vector<int>> matrix;
 };
 
 #endif //OOP_KURSACH_GRAPH_H
