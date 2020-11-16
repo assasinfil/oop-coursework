@@ -94,5 +94,20 @@ std::istream &operator>>(std::istream &is, Graph &graph) {
     return is;
 }
 
+int Graph::maxFlow(int source, int target) {
+    int MaxFlow = 0;
+    int AddFlow;
+    do {
+        AddFlow = findTarget(source, target);
+        MaxFlow += AddFlow;
+    } while (AddFlow > 0);
+    return MaxFlow;
+}
+
+int Graph::findTarget(int source, int target) {
+    //TODO findTarget
+    return 0;
+}
+
 
 

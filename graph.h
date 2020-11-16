@@ -12,9 +12,13 @@ class Graph {
 public:
     Graph(int y, int x);
 
-    Graph(const Graph& other);
+    Graph(const Graph &other);
 
     Graph &operator=(const Graph &op);
+
+    int findTarget(int source, int target);
+
+    int maxFlow(int source, int target);
 
     virtual ~Graph();
 
