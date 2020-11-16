@@ -15,6 +15,6 @@ int main() {
     f >> graph;
     cout << graph;
 
-    cout << graph.maxFlow(0, 5, graph.Ford_Fulkerson);
+    cout << graph.maxFlow(0, 5, graph.Edmonds_Karp);
     return 0;
 }

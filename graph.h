@@ -37,7 +37,7 @@ public:
     friend std::istream &operator>>(std::istream &is, Graph &graph);
 
 private:
-    int n;
+    int count;
     std::vector<std::vector<int>> matrix;
     std::vector<std::vector<int>> flowGraph;
 };

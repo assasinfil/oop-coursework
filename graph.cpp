@@ -5,7 +5,7 @@
 #include "graph.h"
 
 Graph::Graph(int n) {
-    this->n = n;
+    count = n;
     matrix.resize(n);
     flowGraph.resize(n);
     for (int i = 0; i < n; ++i) {
@@ -19,7 +19,7 @@ Graph::~Graph() {
 }
 
 Graph::Graph(const Graph &other) {
-    this->n = other.n;
+    count = other.count;
 
     matrix.clear();
     copy(other.matrix.begin(), other.matrix.end(), back_inserter(matrix));
@@ -37,7 +37,7 @@ std::ostream &operator<<(std::ostream &os, const Graph &graph) {
 
 Graph &Graph::operator=(const Graph &other) {
     if (this != &other) {
-        this->n = other.n;
+        count = other.count;
 
         matrix.clear();
         copy(other.matrix.begin(), other.matrix.end(), back_inserter(matrix));
@@ -46,15 +46,15 @@ Graph &Graph::operator=(const Graph &other) {
 }
 
 std::istream &operator>>(std::istream &is, Graph &graph) {
-    for (int i = 0; i < graph.matrix.size(); ++i) {
-        for (int j = 0; j < graph.matrix.size(); ++j) {
+    for (int i = 0; i < graph.count; ++i) {
+        for (int j = 0; j < graph.count; ++j) {
             is >> graph.matrix[i][j];
         }
     }
     return is;
 }
 
-int Graph::maxFlow(int source, int target, int type) {
+int Graph::maxFlow(int source, int target, int type = Edmonds_Karp) {
     int MaxFlow = 0;
     int AddFlow;
     do {
@@ -62,6 +62,7 @@ int Graph::maxFlow(int source, int target, int type) {
             case Ford_Fulkerson:
                 AddFlow = FordFulkerson(source, target);
                 break;
+            default:
             case Edmonds_Karp:
                 AddFlow = EdmondsKarp(source, target);
                 break;
@@ -74,30 +75,9 @@ int Graph::maxFlow(int source, int target, int type) {
     return MaxFlow;
 }
 
-int Graph::EdmondsKarp(int source, int target) {
-    std::queue<int> q;
-    q.push(source);
-    std::vector<bool> used(this->n, 0);
-    std::vector<int> dist(this->n, INT_MAX);
-    used[source] = true;
-    dist[source] = 0;
-    while (!q.empty()) {
-        int vertex = q.front();
-        q.pop();
-        for (int i = 0; i < this->n; ++i) {
-            if (!used[i]) {
-                used[i] = true;
-                q.push(i);
-                dist[i] = dist[vertex] + 1;
-            }
-        }
-    }
-    return dist[target];
-}
-
 int Graph::FordFulkerson(int source, int target) {
-    std::vector<int> flow(this->n, 0);
-    std::vector<int> link(this->n, -1);
+    std::vector<int> flow(count, 0);
+    std::vector<int> link(count, -1);
     flow[source] = INT_MAX;
 
     std::queue<int> q;
@@ -105,7 +85,7 @@ int Graph::FordFulkerson(int source, int target) {
     while (link[target] == -1 && !q.empty()) {
         int vertex = q.front();
         q.pop();
-        for (int i = 0; i < this->n; ++i) {
+        for (int i = 0; i < count; ++i) {
             if ((matrix[vertex][i] - flowGraph[vertex][i]) > 0 and flow[i] == 0) {
                 q.push(i);
                 link[i] = vertex;
@@ -126,5 +106,24 @@ int Graph::FordFulkerson(int source, int target) {
     return flow[target];
 }
 
-
-
+int Graph::EdmondsKarp(int source, int target) {
+    //TODO EdmondsKarp
+//    std::queue<int> q;
+//    q.push(source);
+//    std::vector<bool> used(count, false);
+//    std::vector<int> dist(count, INT_MAX);
+//    used[source] = true;
+//    dist[source] = 0;
+//    while (!q.empty()) {
+//        int vertex = q.front();
+//        q.pop();
+//        for (int i = 0; i < count; ++i) {
+//            if (!used[i]) {
+//                used[i] = true;
+//                q.push(i);
+//                dist[i] = dist[vertex] + 1;
+//            }
+//        }
+//    }
+//    return dist[target];
+}
