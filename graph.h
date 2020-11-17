@@ -9,6 +9,7 @@
 #include <ostream>
 #include <queue>
 #include <vector>
+#include <algorithm>
 
 class Graph {
 public:
@@ -39,7 +40,7 @@ public:
 private:
     int count;
     std::vector<std::vector<int>> matrix;
-    std::vector<std::vector<int>> flowGraph;
+    std::vector<std::vector<int>> residualGraph;
 };
 
 #endif //OOP_KURSACH_GRAPH_H

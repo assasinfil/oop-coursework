@@ -7,10 +7,10 @@
 Graph::Graph(int n) {
     count = n;
     matrix.resize(n);
-    flowGraph.resize(n);
+    residualGraph.resize(n);
     for (int i = 0; i < n; ++i) {
         matrix[i].resize(n);
-        flowGraph[i].resize(n);
+        residualGraph[i].resize(n);
     }
 }
 
@@ -86,10 +86,10 @@ int Graph::FordFulkerson(int source, int target) {
         int vertex = q.front();
         q.pop();
         for (int i = 0; i < count; ++i) {
-            if ((matrix[vertex][i] - flowGraph[vertex][i]) > 0 and flow[i] == 0) {
+            if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 and flow[i] == 0) {
                 q.push(i);
                 link[i] = vertex;
-                if (matrix[vertex][i] - flowGraph[vertex][i] < flow[vertex])
+                if (matrix[vertex][i] - residualGraph[vertex][i] < flow[vertex])
                     flow[i] = matrix[vertex][i];
                 else
                     flow[i] = flow[vertex];
@@ -100,7 +100,7 @@ int Graph::FordFulkerson(int source, int target) {
 
     int vertex = target;
     while (vertex != source) {
-        flowGraph[link[vertex]][vertex] += flow[target];
+        residualGraph[link[vertex]][vertex] += flow[target];
         vertex = link[vertex];
     }
     return flow[target];
@@ -108,22 +108,49 @@ int Graph::FordFulkerson(int source, int target) {
 
 int Graph::EdmondsKarp(int source, int target) {
     //TODO EdmondsKarp
-//    std::queue<int> q;
-//    q.push(source);
-//    std::vector<bool> used(count, false);
-//    std::vector<int> dist(count, INT_MAX);
-//    used[source] = true;
-//    dist[source] = 0;
-//    while (!q.empty()) {
-//        int vertex = q.front();
-//        q.pop();
-//        for (int i = 0; i < count; ++i) {
-//            if (!used[i]) {
-//                used[i] = true;
-//                q.push(i);
-//                dist[i] = dist[vertex] + 1;
-//            }
-//        }
-//    }
-//    return dist[target];
+    std::queue<int> q;
+    q.push(source);
+    std::vector<int> used(count, 0);
+    std::vector<int> dist(count, INT_MAX);
+    std::vector<int> path(count, -1);
+    dist[source] = 0;
+    while (!q.empty()) {
+        int vertex = q.front();
+        q.pop();
+
+        if (used[vertex] == 2)
+            continue;
+        used[vertex] = 2;
+
+        for (int i = target; i >= 0; i--) {
+            if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 && used[i] != 2)//есть связь и вершина не обработана
+            {
+                if (dist[i] > dist[vertex] + 1) {
+                    dist[i] = dist[vertex] + 1;
+                    path[i] = vertex;
+                }
+                q.push(i);
+                used[i] = 1;
+            }
+        }
+    }
+    std::vector<int> pathToTarget;
+    int minFlow = INT_MAX;
+    int nextPath = target;
+    while (nextPath != -1) {
+        pathToTarget.insert(pathToTarget.begin(), nextPath);
+        nextPath = path[nextPath];
+    }
+    for (int i = 0; i < pathToTarget.size() - 1; ++i) {
+        int minFlowW =
+                matrix[pathToTarget[i]][pathToTarget[i + 1]] - residualGraph[pathToTarget[i]][pathToTarget[i + 1]];
+        if (minFlow > minFlowW and minFlowW > 0) {
+            minFlow = minFlowW;
+        }
+    }
+    for (int i = 0; i < pathToTarget.size() - 1; ++i) {
+        residualGraph[pathToTarget[i]][pathToTarget[i + 1]] = minFlow;
+    }
+    if (minFlow == INT_MAX) return 0;
+    return minFlow;
 }
