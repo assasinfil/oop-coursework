@@ -95,7 +95,7 @@ int Graph::FordFulkerson(int source, int target) {
                 q.push(i);
                 link[i] = vertex;
                 if (matrix[vertex][i] - residualGraph[vertex][i] < flow[vertex])
-                    flow[i] = matrix[vertex][i];
+                    flow[i] = matrix[vertex][i]- residualGraph[vertex][i];
                 else
                     flow[i] = flow[vertex];
             }
