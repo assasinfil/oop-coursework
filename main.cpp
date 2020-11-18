@@ -15,9 +15,13 @@ int main() {
 
     Graph graph(n);
     f >> graph;
-    cout << graph;
+    cout << graph << endl;
 
-    //cout << graph.maxFlow(0, 5, graph.Ford_Fulkerson);
-    cout << graph.maxFlow(0, 5, graph.Edmonds_Karp);
+    for (int i = 1; i < n; ++i) {
+        cout << endl << i << ": ";
+        cout << graph.maxFlow(0, i, graph.Ford_Fulkerson) << ", ";
+        cout << graph.maxFlow(0, i, graph.Edmonds_Karp) << ", ";
+//        cout << graph.maxFlow(0, 5, graph.Edmonds_Karp) << endl;
+    }
     return 0;
 }

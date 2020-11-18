@@ -55,6 +55,11 @@ std::istream &operator>>(std::istream &is, Graph &graph) {
 }
 
 int Graph::maxFlow(int source, int target, int type = Edmonds_Karp) {
+    for (int i = 0; i < count; ++i) {
+        for (int j = 0; j < count; ++j) {
+            residualGraph[i][j] = 0;
+        }
+    }
     int MaxFlow = 0;
     int AddFlow;
     do {
@@ -107,10 +112,9 @@ int Graph::FordFulkerson(int source, int target) {
 }
 
 int Graph::EdmondsKarp(int source, int target) {
-    //TODO EdmondsKarp
     std::queue<int> q;
     q.push(source);
-    std::vector<int> used(count, 0);
+    std::vector<bool> used(count, false);
     std::vector<int> dist(count, INT_MAX);
     std::vector<int> path(count, -1);
     dist[source] = 0;
@@ -118,19 +122,18 @@ int Graph::EdmondsKarp(int source, int target) {
         int vertex = q.front();
         q.pop();
 
-        if (used[vertex] == 2)
+        if (used[vertex])
             continue;
-        used[vertex] = 2;
+        used[vertex] = true;
 
-        for (int i = target; i >= 0; i--) {
-            if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 && used[i] != 2)//есть связь и вершина не обработана
+        for (int i = 0; i < count; ++i) {
+            if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 and !used[i])//есть связь и вершина не обработана
             {
                 if (dist[i] > dist[vertex] + 1) {
                     dist[i] = dist[vertex] + 1;
                     path[i] = vertex;
                 }
                 q.push(i);
-                used[i] = 1;
             }
         }
     }
@@ -141,6 +144,7 @@ int Graph::EdmondsKarp(int source, int target) {
         pathToTarget.insert(pathToTarget.begin(), nextPath);
         nextPath = path[nextPath];
     }
+    //Ищем наименьшую пропускную способность маршрута
     for (int i = 0; i < pathToTarget.size() - 1; ++i) {
         int minFlowW =
                 matrix[pathToTarget[i]][pathToTarget[i + 1]] - residualGraph[pathToTarget[i]][pathToTarget[i + 1]];
@@ -148,8 +152,9 @@ int Graph::EdmondsKarp(int source, int target) {
             minFlow = minFlowW;
         }
     }
+    //Запоминаем использованную минимальную мощность
     for (int i = 0; i < pathToTarget.size() - 1; ++i) {
-        residualGraph[pathToTarget[i]][pathToTarget[i + 1]] = minFlow;
+        residualGraph[pathToTarget[i]][pathToTarget[i + 1]] += minFlow;
     }
     if (minFlow == INT_MAX) return 0;
     return minFlow;
