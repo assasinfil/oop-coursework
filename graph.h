@@ -16,7 +16,7 @@ public:
     enum {
         Ford_Fulkerson,
         Edmonds_Karp,
-        Dinitz
+        Dinitz_alg
     };
 
     Graph(int n);
@@ -29,8 +29,14 @@ public:
 
     int FordFulkerson(int source, int target);
 
-    int maxFlow(int source, int target, int type);
+    std::vector<int> Bfs(int source, int target);
 
+    int Dfs(int source, int target,std::vector<int> dist,std::vector<int> p);
+   
+    int Dinitz(int source, int target);
+
+    int maxFlow(int source, int target, int type);
+    
     virtual ~Graph();
 
     friend std::ostream &operator<<(std::ostream &os, const Graph &graph);
@@ -41,6 +47,8 @@ private:
     int count;
     std::vector<std::vector<int>> matrix;
     std::vector<std::vector<int>> residualGraph;
+
+
 };
 
 #endif //OOP_KURSACH_GRAPH_H

@@ -71,8 +71,8 @@ int Graph::maxFlow(int source, int target, int type = Edmonds_Karp) {
             case Edmonds_Karp:
                 AddFlow = EdmondsKarp(source, target);
                 break;
-            case Dinitz:
-//                AddFlow = Dinitz(source, target);
+            case Dinitz_alg:
+               AddFlow = Dinitz(source, target);
                 break;
         }
         MaxFlow += AddFlow;
@@ -158,4 +158,68 @@ int Graph::EdmondsKarp(int source, int target) {
     }
     if (minFlow == INT_MAX) return 0;
     return minFlow;
+}
+
+std::vector<int> Graph::Bfs(int source, int target) {
+    std::queue<int> q;
+    q.push(source);
+    std::vector<bool> used(count, false);
+    std::vector<int> dist(count, INT_MAX);
+    dist[source] = 0;
+    while (!q.empty()) {
+        int vertex = q.front();
+        q.pop();
+
+        if (used[vertex])
+            continue;
+        used[vertex] = true;
+
+        for (int i = 0; i < count; ++i) {
+            if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 and !used[i])//есть связь и вершина не обработана
+            {
+                if (dist[i] > dist[vertex] + 1) {
+                    dist[i] = dist[vertex] + 1;
+
+                }
+                q.push(i);
+            }
+        }
+    }
+    return dist;
+
+}
+
+int Graph::Dfs(int source, int flow,std::vector<int> dist,std::vector<int> p) {
+
+    //std::vector<int> p(count, 0);
+    //std::vector<int> dist(count, INT_MAX);
+
+    if(source==count-1 || flow==0) return flow;
+    for(int i=p[source];i<count;++i)
+    {
+        if(dist[i]==dist[source]+1) {
+            int min = flow;
+            if (matrix[source][i] - residualGraph[source][i] < min)
+                min = matrix[source][i] - residualGraph[source][i];
+            int d = Dfs(i, min,dist,p);
+            if (d != 0){
+                residualGraph[source][i] += d;
+                residualGraph[i][source] -= d;
+                return d;
+            }
+        }
+        p[source]++;
+    }
+    return 0;
+    }
+//TODO Dinitz
+int Graph::Dinitz(int source, int target) {
+    int flow=0;
+    std::vector<int> p(count,0);
+    std::vector v=Bfs(source, target);
+    if(v[target]!=INT_MAX)
+        flow=Dfs(source,INT_MAX,v,p);
+
+    return flow;
+
 }
