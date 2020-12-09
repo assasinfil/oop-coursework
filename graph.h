@@ -10,6 +10,7 @@
 #include <queue>
 #include <vector>
 #include <algorithm>
+#include <climits>
 
 class Graph {
 public:
@@ -31,7 +32,7 @@ public:
 
     std::vector<int> Bfs(int source, int target);
 
-    int Dfs(int source, int target,std::vector<int> dist,std::vector<int> p);
+    int Dfs(int source, int flow, int target,std::vector<int> dist,std::vector<int> p);
    
     int Dinitz(int source, int target);
 

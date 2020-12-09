@@ -2,6 +2,7 @@
 // Created by assasinfil on 01.11.2020.
 //
 
+
 #include "graph.h"
 
 Graph::Graph(int n) {
@@ -72,7 +73,7 @@ int Graph::maxFlow(int source, int target, int type = Edmonds_Karp) {
                 AddFlow = EdmondsKarp(source, target);
                 break;
             case Dinitz_alg:
-               AddFlow = Dinitz(source, target);
+                AddFlow = Dinitz(source, target);
                 break;
         }
         MaxFlow += AddFlow;
@@ -95,7 +96,7 @@ int Graph::FordFulkerson(int source, int target) {
                 q.push(i);
                 link[i] = vertex;
                 if (matrix[vertex][i] - residualGraph[vertex][i] < flow[vertex])
-                    flow[i] = matrix[vertex][i]- residualGraph[vertex][i];
+                    flow[i] = matrix[vertex][i] - residualGraph[vertex][i];
                 else
                     flow[i] = flow[vertex];
             }
@@ -189,20 +190,19 @@ std::vector<int> Graph::Bfs(int source, int target) {
 
 }
 
-int Graph::Dfs(int source, int flow,std::vector<int> dist,std::vector<int> p) {
+int Graph::Dfs(int source, int flow, int target, std::vector<int> dist, std::vector<int> p) {
 
     //std::vector<int> p(count, 0);
     //std::vector<int> dist(count, INT_MAX);
 
-    if(source==count-1 || flow==0) return flow;
-    for(int i=p[source];i<count;++i)
-    {
-        if(dist[i]==dist[source]+1) {
+    if (source == count - 1 || flow == 0 || source == target) return flow;
+    for (int i = p[source]; i < count; ++i) {
+        if (dist[i] == dist[source] + 1) {
             int min = flow;
             if (matrix[source][i] - residualGraph[source][i] < min)
                 min = matrix[source][i] - residualGraph[source][i];
-            int d = Dfs(i, min,dist,p);
-            if (d != 0){
+            int d = Dfs(i, min, target, dist, p);
+            if (d != 0) {
                 residualGraph[source][i] += d;
                 residualGraph[i][source] -= d;
                 return d;
@@ -211,14 +211,15 @@ int Graph::Dfs(int source, int flow,std::vector<int> dist,std::vector<int> p) {
         p[source]++;
     }
     return 0;
-    }
+}
+
 //TODO Dinitz
 int Graph::Dinitz(int source, int target) {
-    int flow=0;
-    std::vector<int> p(count,0);
-    std::vector v=Bfs(source, target);
-    if(v[target]!=INT_MAX)
-        flow=Dfs(source,INT_MAX,v,p);
+    int flow = 0;
+    std::vector<int> p(count, 0);
+    std::vector v = Bfs(source, target);
+    if (v[target] != INT_MAX)
+        flow = Dfs(source, INT_MAX, target, v, p);
 
     return flow;
 
