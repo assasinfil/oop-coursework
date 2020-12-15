@@ -195,7 +195,8 @@ int Graph::Dfs(int source, int flow, int target, std::vector<int> dist, std::vec
     //std::vector<int> p(count, 0);
     //std::vector<int> dist(count, INT_MAX);
 
-    if (source == count - 1 || flow == 0 || source == target) return flow;
+    if (flow == 0 || source == target)
+        return flow;
     for (int i = p[source]; i < count; ++i) {
         if (dist[i] == dist[source] + 1) {
             int min = flow;
