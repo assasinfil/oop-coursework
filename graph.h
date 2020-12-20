@@ -1,5 +1,5 @@
 //
-// Created by assasinfil on 01.11.2020.
+// Created by assasinfil and polyaria on 01.11.2020.
 //
 
 #ifndef OOP_KURSACH_GRAPH_H
@@ -20,9 +20,9 @@ public:
         Dinitz_alg
     };
 
-    Graph(int n);
+    explicit Graph(int n);
 
-    Graph(const Graph &other);
+    [[maybe_unused]] Graph(const Graph &other);
 
     Graph &operator=(const Graph &op);
 
@@ -30,7 +30,7 @@ public:
 
     int FordFulkerson(int source, int target);
 
-    std::vector<int> Bfs(int source, int target);
+    std::vector<int> Bfs(int source);
 
     int Dfs(int source, int flow, int target,std::vector<int> dist,std::vector<int> p);
    

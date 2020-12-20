@@ -1,5 +1,5 @@
 //
-// Created by assasinfil on 01.11.2020.
+// Created by assasinfil and polyaria on 01.11.2020.
 //
 #include <iostream>
 #include <fstream>
@@ -14,10 +14,13 @@ int main() {
     f >> n;
 
     Graph graph(n);
+
     f >> graph;
+    f.close();
+
     cout << graph << endl;
 
-    for (int i = 1; i < n; ++i) {
+    for (auto i = 1; i < n; ++i) {
         cout << endl << i << ": ";
         cout << graph.maxFlow(0, i, graph.Ford_Fulkerson) << ", ";
         cout << graph.maxFlow(0, i, graph.Edmonds_Karp) << ", ";

@@ -1,5 +1,5 @@
 //
-// Created by assasinfil on 01.11.2020.
+// Created by assasinfil and polyaria on 01.11.2020.
 //
 
 
@@ -19,7 +19,7 @@ Graph::~Graph() {
     matrix.clear();
 }
 
-Graph::Graph(const Graph &other) {
+[[maybe_unused]] Graph::Graph(const Graph &other) {
     count = other.count;
 
     matrix.clear();
@@ -161,7 +161,7 @@ int Graph::EdmondsKarp(int source, int target) {
     return minFlow;
 }
 
-std::vector<int> Graph::Bfs(int source, int target) {
+std::vector<int> Graph::Bfs(int source) {
     std::queue<int> q;
     q.push(source);
     std::vector<bool> used(count, false);
@@ -214,14 +214,12 @@ int Graph::Dfs(int source, int flow, int target, std::vector<int> dist, std::vec
     return 0;
 }
 
-//TODO Dinitz
 int Graph::Dinitz(int source, int target) {
     int flow = 0;
     std::vector<int> p(count, 0);
-    std::vector v = Bfs(source, target);
+    std::vector v = Bfs(source);
     if (v[target] != INT_MAX)
         flow = Dfs(source, INT_MAX, target, v, p);
 
     return flow;
-
 }
