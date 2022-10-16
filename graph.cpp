@@ -27,8 +27,8 @@ Graph::~Graph() {
 }
 
 std::ostream &operator<<(std::ostream &os, const Graph &graph) {
-    for (const auto &row : graph.matrix) {
-        for (const auto &item : row) {
+    for (const auto &row: graph.matrix) {
+        for (const auto &item: row) {
             os << item << ' ';
         }
         os << std::endl;
@@ -47,8 +47,8 @@ Graph &Graph::operator=(const Graph &other) {
 }
 
 std::istream &operator>>(std::istream &is, Graph &graph) {
-    for (int i = 0; i < graph.count; ++i) {
-        for (int j = 0; j < graph.count; ++j) {
+    for (auto i = 0; i < graph.count; ++i) {
+        for (auto j = 0; j < graph.count; ++j) {
             is >> graph.matrix[i][j];
         }
     }
@@ -56,8 +56,8 @@ std::istream &operator>>(std::istream &is, Graph &graph) {
 }
 
 int Graph::maxFlow(int source, int target, int type = Edmonds_Karp) {
-    for (int i = 0; i < count; ++i) {
-        for (int j = 0; j < count; ++j) {
+    for (auto i = 0; i < count; ++i) {
+        for (auto j = 0; j < count; ++j) {
             residualGraph[i][j] = 0;
         }
     }
@@ -72,8 +72,8 @@ int Graph::maxFlow(int source, int target, int type = Edmonds_Karp) {
             case Edmonds_Karp:
                 AddFlow = EdmondsKarp(source, target);
                 break;
-            case Dinitz_alg:
-                AddFlow = Dinitz(source, target);
+            case Dinits_alg:
+                AddFlow = Dinits(source, target);
                 break;
         }
         MaxFlow += AddFlow;
@@ -91,14 +91,13 @@ int Graph::FordFulkerson(int source, int target) {
     while (link[target] == -1 && !q.empty()) {
         int vertex = q.front();
         q.pop();
-        for (int i = 0; i < count; ++i) {
+        for (auto i = 0; i < count; ++i) {
             if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 and flow[i] == 0) {
                 q.push(i);
                 link[i] = vertex;
-                if (matrix[vertex][i] - residualGraph[vertex][i] < flow[vertex])
-                    flow[i] = matrix[vertex][i] - residualGraph[vertex][i];
-                else
-                    flow[i] = flow[vertex];
+                if (matrix[vertex][i] - residualGraph[vertex][i] < flow[vertex]) flow[i] = matrix[vertex][i] -
+                                                                                           residualGraph[vertex][i];
+                else flow[i] = flow[vertex];
             }
         }
     }
@@ -123,12 +122,11 @@ int Graph::EdmondsKarp(int source, int target) {
         int vertex = q.front();
         q.pop();
 
-        if (used[vertex])
-            continue;
+        if (used[vertex]) continue;
         used[vertex] = true;
 
-        for (int i = 0; i < count; ++i) {
-            if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 and !used[i])//есть связь и вершина не обработана
+        for (auto i = 0; i < count; ++i) {
+            if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 and !used[i]) // есть связь и вершина не обработана
             {
                 if (dist[i] > dist[vertex] + 1) {
                     dist[i] = dist[vertex] + 1;
@@ -146,17 +144,13 @@ int Graph::EdmondsKarp(int source, int target) {
         nextPath = path[nextPath];
     }
     //Ищем наименьшую пропускную способность маршрута
-    for (int i = 0; i < pathToTarget.size() - 1; ++i) {
+    for (auto i = 0; i < pathToTarget.size() - 1; ++i) {
         int minFlowW =
                 matrix[pathToTarget[i]][pathToTarget[i + 1]] - residualGraph[pathToTarget[i]][pathToTarget[i + 1]];
-        if (minFlow > minFlowW and minFlowW > 0) {
-            minFlow = minFlowW;
-        }
+        if (minFlow > minFlowW and minFlowW > 0) minFlow = minFlowW;
     }
     //Запоминаем использованную минимальную мощность
-    for (int i = 0; i < pathToTarget.size() - 1; ++i) {
-        residualGraph[pathToTarget[i]][pathToTarget[i + 1]] += minFlow;
-    }
+    for (auto i = 0; i < pathToTarget.size() - 1; ++i) residualGraph[pathToTarget[i]][pathToTarget[i + 1]] += minFlow;
     if (minFlow == INT_MAX) return 0;
     return minFlow;
 }
@@ -168,14 +162,14 @@ std::vector<int> Graph::Bfs(int source) {
     std::vector<int> dist(count, INT_MAX);
     dist[source] = 0;
     while (!q.empty()) {
-        int vertex = q.front();
+        auto vertex = q.front();
         q.pop();
 
         if (used[vertex])
             continue;
         used[vertex] = true;
 
-        for (int i = 0; i < count; ++i) {
+        for (auto i = 0; i < count; ++i) {
             if ((matrix[vertex][i] - residualGraph[vertex][i]) > 0 and !used[i])//есть связь и вершина не обработана
             {
                 if (dist[i] > dist[vertex] + 1) {
@@ -190,14 +184,12 @@ std::vector<int> Graph::Bfs(int source) {
 
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
 int Graph::Dfs(int source, int flow, int target, std::vector<int> dist, std::vector<int> p) {
-
-    //std::vector<int> p(count, 0);
-    //std::vector<int> dist(count, INT_MAX);
-
     if (flow == 0 || source == target)
         return flow;
-    for (int i = p[source]; i < count; ++i) {
+    for (auto i = p[source]; i < count; ++i) {
         if (dist[i] == dist[source] + 1) {
             int min = flow;
             if (matrix[source][i] - residualGraph[source][i] < min)
@@ -213,8 +205,9 @@ int Graph::Dfs(int source, int flow, int target, std::vector<int> dist, std::vec
     }
     return 0;
 }
+#pragma clang diagnostic pop
 
-int Graph::Dinitz(int source, int target) {
+int Graph::Dinits(int source, int target) {
     int flow = 0;
     std::vector<int> p(count, 0);
     std::vector v = Bfs(source);

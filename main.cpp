@@ -24,7 +24,7 @@ int main() {
         cout << endl << i << ": ";
         cout << graph.maxFlow(0, i, graph.Ford_Fulkerson) << ", ";
         cout << graph.maxFlow(0, i, graph.Edmonds_Karp) << ", ";
-        cout << graph.maxFlow(0, i, graph.Dinitz_alg) << ", ";
+        cout << graph.maxFlow(0, i, graph.Dinits_alg) << ", ";
     }
 
     return 0;

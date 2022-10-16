@@ -2,8 +2,8 @@
 // Created by assasinfil and polyaria on 01.11.2020.
 //
 
-#ifndef OOP_KURSACH_GRAPH_H
-#define OOP_KURSACH_GRAPH_H
+#ifndef GRAPH_H
+#define GRAPH_H
 
 #include <iostream>
 #include <ostream>
@@ -17,7 +17,7 @@ public:
     enum {
         Ford_Fulkerson,
         Edmonds_Karp,
-        Dinitz_alg
+        Dinits_alg
     };
 
     explicit Graph(int n);
@@ -32,12 +32,12 @@ public:
 
     std::vector<int> Bfs(int source);
 
-    int Dfs(int source, int flow, int target,std::vector<int> dist,std::vector<int> p);
-   
-    int Dinitz(int source, int target);
+    int Dfs(int source, int flow, int target, std::vector<int> dist, std::vector<int> p);
+
+    int Dinits(int source, int target);
 
     int maxFlow(int source, int target, int type);
-    
+
     virtual ~Graph();
 
     friend std::ostream &operator<<(std::ostream &os, const Graph &graph);
@@ -52,4 +52,4 @@ private:
 
 };
 
-#endif //OOP_KURSACH_GRAPH_H
+#endif //GRAPH_H
